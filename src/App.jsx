@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import Navbar from './components/Navbar'
+import { FaEdit } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -72,24 +74,24 @@ function App() {
     <>
       <Navbar />
       <div className="container mx-auto my-5 rounded-2xl p-5 bg-slate-200 min-h-[80vh]">
-        <div className="addTodo my-5">
-          <h2 className='test-lg font-bold'>Add a Todo</h2>
-          <input type="text" onChange={handleChange} value={todo} className='w-160 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out' />
-          <button onClick={handleAdd} disabled={todo.length<=3} className='text-white bg-slate-500 border-0 py-2 px-6 focus:outline-none hover:bg-slate-600 rounded text-lg mx-6'>Save</button>
+        <div className="addTodo  my-5 ">
+          <h2 className='text-lg sm:text-xl text-gray-900 font-medium title-font mb-2'>Add a Todo</h2>
+          <input type="text" onChange={handleChange} value={todo} className='w-full md:w-160 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out' />
+          <button onClick={handleAdd} disabled={todo.length<=3} className='text-white bg-slate-500 border-0 py-2 px-6 focus:outline-none hover:bg-slate-600 rounded text-lg sm:m-2 md:mx-6'>Save</button>
         </div>
         <input type="checkbox" onChange={toggleFinished} checked={showFinished} name="" id="" /> Show Finished
-        <h2 className='text-lg font-bold'>Your Todos</h2>
+        <h2 className='text-lg sm:text-xl text-gray-900 font-medium title-font mb-2'>Your Todos</h2>
         <div className="todos">
           {todos.length===0 && <div className='m-5'>No Todos to Display</div>}
           {todos.map(item => {
-            return(showFinished || !item.isCompleted) && (<div key={item.id} className="todo flex w-1/2 my-2 justify-between">
+            return(showFinished || !item.isCompleted) && (<div key={item.id} className="todo flex md:w-1/2 my-2 justify-between">
               <input onChange={handleCheckbox} type="checkbox" checked={item.isCompleted} name={item.id} id='' />
               <div className={item.isCompleted ? "line-through" : ""}>
                 {item.todo}
               </div>
               <div className="buttons">
-                <button onClick={(e)=>{handleEdit(e, item.id)}} className='text-white bg-slate-500 border-0 py-2 px-6 focus:outline-none hover:bg-slate-600 rounded text-lg mx-1'>Edit</button>
-                <button onClick={(e) => { handleDelete(e, item.id) }} className='text-white bg-slate-500 border-0 py-2 px-6 focus:outline-none hover:bg-slate-600 rounded text-lg mx-1'>Delete</button>
+                <button onClick={(e)=>{handleEdit(e, item.id)}} className='text-white bg-slate-500 border-0 py-2 px-6 focus:outline-none hover:bg-slate-600 rounded text-lg mx-1'><FaEdit /></button>
+                <button onClick={(e) => { handleDelete(e, item.id) }} className='text-white bg-slate-500 border-0 py-2 px-6 focus:outline-none hover:bg-slate-600 rounded text-lg mx-1'><MdDeleteForever /></button>
               </div>
             </div>)
           })}
