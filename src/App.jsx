@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Navbar from './components/Navbar'
 import { v4 as uuidv4 } from 'uuid';
 
@@ -6,12 +6,32 @@ import { v4 as uuidv4 } from 'uuid';
 function App() {
   const [todo, setTodo] = useState("")
   const [todos, setTodos] = useState([])
+  const [showFinished, setshowFinished] = useState(true)
+
+  useEffect(() => {
+    let todoString = localStorage.getItem("todos");
+    if(todoString){
+      let todos=JSON.parse(localStorage.getItem("todos"))
+      setTodos(todos)
+    }
+  }, [])
+  
+
+  const saveToLs=(params) => {
+    localStorage.setItem("todos",JSON.stringify(todos))
+  }
+  
+  const toggleFinished =(e) => {
+    setshowFinished(!showFinished)
+  }
+  
 
   const handleDelete = (e, id) => {
     let newTodos = todos.filter(item=>{
       return item.id != id;
     });
     setTodos(newTodos)
+    saveToLs()
    }
 
   const handleChange = (e) => {
@@ -20,22 +40,18 @@ function App() {
   
   const handleEdit = (e, id) => { 
     let t=todos.filter(i=>i.id === id)
-    console.log(t[0])
     setTodo(t[0].todo)
     let newTodos = todos.filter(item=>{
       return item.id != id;
     });
     setTodos(newTodos)
+    saveToLs()
   }
 
   const handleAdd = () => {
-    if(todo.length>0){
       setTodos([...todos, { id: uuidv4(), todo, isCompleted: false }])
       setTodo("")
-    }
-    else{
-      alert("Enter Some Text")
-    }
+      saveToLs()
   }
   const handleCheckbox = (e) => {
     let id = e.target.name;
@@ -45,6 +61,7 @@ function App() {
     let newTodos = [...todos];
     newTodos[index].isCompleted = !newTodos[index].isCompleted;
     setTodos(newTodos, todos)
+    saveToLs()
   }
 
 
@@ -54,15 +71,16 @@ function App() {
       <div className="container mx-auto my-5 rounded-2xl p-5 bg-slate-200 min-h-[80vh]">
         <div className="addTodo my-5">
           <h2 className='test-lg font-bold'>Add a Todo</h2>
-          <input type="text" onChange={handleChange} value={todo} className='w-80 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out' />
-          <button onClick={handleAdd} className='text-white bg-slate-500 border-0 py-2 px-6 focus:outline-none hover:bg-slate-600 rounded text-lg mx-6'>Save</button>
+          <input type="text" onChange={handleChange} value={todo} className='w-160 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out' />
+          <button onClick={handleAdd} disabled={todo.length<=3} className='text-white bg-slate-500 border-0 py-2 px-6 focus:outline-none hover:bg-slate-600 rounded text-lg mx-6'>Save</button>
         </div>
+        <input type="checkbox" onChange={toggleFinished} checked={showFinished} name="" id="" /> Show Finished
         <h2 className='text-lg font-bold'>Your Todos</h2>
         <div className="todos">
           {todos.length===0 && <div className='m-5'>No Todos to Display</div>}
           {todos.map(item => {
-            return (<div key={item.id} className="todo flex w-1/4 my-2 justify-between">
-              <input onChange={handleCheckbox} type="checkbox" value={item.isCompleted} name={item.id} id='' />
+            return(showFinished || !item.isCompleted) && (<div key={item.id} className="todo flex w-1/2 my-2 justify-between">
+              <input onChange={handleCheckbox} type="checkbox" checked={item.isCompleted} name={item.id} id='' />
               <div className={item.isCompleted ? "line-through" : ""}>
                 {item.todo}
               </div>
