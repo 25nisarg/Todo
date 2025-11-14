@@ -10,14 +10,15 @@ function App() {
 
   useEffect(() => {
     let todoString = localStorage.getItem("todos");
+    console.log(todoString)
     if(todoString){
       let todos=JSON.parse(localStorage.getItem("todos"))
       setTodos(todos)
     }
   }, [])
   
-
-  const saveToLs=(params) => {
+  const saveToLs=(todos) => {
+    console.log(todos)
     localStorage.setItem("todos",JSON.stringify(todos))
   }
   
@@ -31,7 +32,7 @@ function App() {
       return item.id != id;
     });
     setTodos(newTodos)
-    saveToLs()
+    saveToLs(newTodos)
    }
 
   const handleChange = (e) => {
@@ -45,13 +46,15 @@ function App() {
       return item.id != id;
     });
     setTodos(newTodos)
-    saveToLs()
+    saveToLs(newTodos)
   }
 
   const handleAdd = () => {
-      setTodos([...todos, { id: uuidv4(), todo, isCompleted: false }])
+      const newTodo=[...todos, { id: uuidv4(), todo, isCompleted: false }]
+      setTodos(newTodo)
       setTodo("")
-      saveToLs()
+      console.log(newTodo)
+      saveToLs(newTodo)
   }
   const handleCheckbox = (e) => {
     let id = e.target.name;
@@ -61,7 +64,7 @@ function App() {
     let newTodos = [...todos];
     newTodos[index].isCompleted = !newTodos[index].isCompleted;
     setTodos(newTodos, todos)
-    saveToLs()
+    saveToLs(newTodos)
   }
 
 
