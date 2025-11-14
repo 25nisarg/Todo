@@ -18,14 +18,24 @@ function App() {
     setTodo(e.target.value)
   }
   
-  const handleEdit = () => { 
-    
+  const handleEdit = (e, id) => { 
+    let t=todos.filter(i=>i.id === id)
+    console.log(t[0])
+    setTodo(t[0].todo)
+    let newTodos = todos.filter(item=>{
+      return item.id != id;
+    });
+    setTodos(newTodos)
   }
 
   const handleAdd = () => {
-    setTodos([...todos, { id: uuidv4(), todo, isCompleted: false }])
-    setTodo("")
-    console.log(todos)
+    if(todo.length>0){
+      setTodos([...todos, { id: uuidv4(), todo, isCompleted: false }])
+      setTodo("")
+    }
+    else{
+      alert("Enter Some Text")
+    }
   }
   const handleCheckbox = (e) => {
     let id = e.target.name;
@@ -44,8 +54,8 @@ function App() {
       <div className="container mx-auto my-5 rounded-2xl p-5 bg-slate-200 min-h-[80vh]">
         <div className="addTodo my-5">
           <h2 className='test-lg font-bold'>Add a Todo</h2>
-          <input type="text" onChange={handleChange} value={todo} className='w-80' />
-          <button onClick={handleAdd} className='bg-slate-700 font-bold hover:bg-slate-950 text-white p-4 py-1 rounded-md mx-6'>Add</button>
+          <input type="text" onChange={handleChange} value={todo} className='w-80 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out' />
+          <button onClick={handleAdd} className='text-white bg-slate-500 border-0 py-2 px-6 focus:outline-none hover:bg-slate-600 rounded text-lg mx-6'>Save</button>
         </div>
         <h2 className='text-lg font-bold'>Your Todos</h2>
         <div className="todos">
@@ -57,8 +67,8 @@ function App() {
                 {item.todo}
               </div>
               <div className="buttons">
-                <button onClick={handleEdit} className='bg-slate-700 font-bold hover:bg-slate-950 text-white p-4 py-1 rounded-md mx-1'>Edit</button>
-                <button onClick={(e) => { handleDelete(e, item.id) }} className='bg-slate-700 font-bold hover:bg-slate-950 text-white p-4 py-1 rounded-md mx-1'>Delete</button>
+                <button onClick={(e)=>{handleEdit(e, item.id)}} className='text-white bg-slate-500 border-0 py-2 px-6 focus:outline-none hover:bg-slate-600 rounded text-lg mx-1'>Edit</button>
+                <button onClick={(e) => { handleDelete(e, item.id) }} className='text-white bg-slate-500 border-0 py-2 px-6 focus:outline-none hover:bg-slate-600 rounded text-lg mx-1'>Delete</button>
               </div>
             </div>)
           })}
